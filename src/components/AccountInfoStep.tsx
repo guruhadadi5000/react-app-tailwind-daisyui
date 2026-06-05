@@ -10,7 +10,7 @@ const AccountInfoStep = ({ data, onChange, errors }: AccountInfoStepProps) => {
           className={`input w-full ${errors.username ? "input-error" : ""}`}
           value={data.username || ""}
           onChange={(e) => onChange("username", e.target.value)}
-          placeholder="jane_doe"
+          placeholder="john_doe"
         />
         {errors.username && (
           <p className="text-sm text-red-500 mt-1">{errors.username}</p>
@@ -46,6 +46,13 @@ const AccountInfoStep = ({ data, onChange, errors }: AccountInfoStepProps) => {
               {errors.passwordConfirm}
             </p>
           )}
+          {!errors.passwordConfirm &&
+            !errors.password &&
+            errors.passwordMatch && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.passwordMatch}
+              </p>
+            )}
         </div>
       </div>
     </div>

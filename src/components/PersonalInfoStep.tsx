@@ -11,7 +11,7 @@ const PersonalInfoStep = ({
         <label>Full name</label>
         <input
           type="text"
-          className={`input w-full ${errors.fullName ? "input-error" : ""}`}
+          className={`input w-full placeholder:text-gray-300 ${errors.fullName ? "input-error" : ""}`}
           value={data.fullName || ""}
           onChange={(e) => onChange("fullName", e.target.value)}
           placeholder="John Doe"
@@ -24,7 +24,7 @@ const PersonalInfoStep = ({
         <label className="label mb-1">Email</label>
         <input
           type="email"
-          className={`input w-full ${errors.email ? "input-error" : ""}`}
+          className={`input w-full placeholder:text-gray-300 ${errors.email ? "input-error" : ""}`}
           value={data.email || ""}
           onChange={(e) => onChange("email", e.target.value)}
           placeholder="john@example.com"
@@ -36,7 +36,7 @@ const PersonalInfoStep = ({
       <div>
         <label className="label mb-1">About (optional)</label>
         <textarea
-          className="textarea w-full resize-none"
+          className="textarea w-full resize-none placeholder:text-gray-300"
           value={data.about || ""}
           onChange={(e) => onChange("about", e.target.value)}
           placeholder="Short bio..."

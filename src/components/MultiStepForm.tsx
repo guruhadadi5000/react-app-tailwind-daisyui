@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import confetti from "canvas-confetti";
 import ProgressBar from "./ProgressBar";
 import PersonalInfoStep from "./PersonalInfoStep";
@@ -8,16 +8,14 @@ import { AnimatePresence } from "motion/react";
 
 import { motion } from "motion/react";
 import ReviewInfoStep from "./ReviewInfoStep";
+import type { FormData, FormErrors, FormField } from "../types/form";
 
 const validators = {
-  required: (value: string) =>
-    value?.trim() === "" || value === undefined || value === null
-      ? ""
-      : "Required",
-  email: (value: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "" : "invalid email",
-  minLength: (value: string, min: number) =>
-    value.length >= min ? "" : `Must be of ${min} length`,
+  required: (value?: string) => (!value?.trim() ? "Required" : ""),
+  email: (value?: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value ?? "") ? "" : "invalid email",
+  minLength: (value: string | undefined, min: number) =>
+    (value?.length ?? 0) >= min ? "" : `Must be of ${min} length`,
 };
 
 const MultiStepForm = () => {
@@ -27,11 +25,11 @@ const MultiStepForm = () => {
     );
     return isNaN(stepFromLocalStorage) ? 0 : stepFromLocalStorage;
   });
-  const [data, setData] = useState<Record<string, string>>(() =>
-    JSON.parse(localStorage.getItem("msf-data") || "{}"),
+  const [data, setData] = useState<FormData>(
+    () => JSON.parse(localStorage.getItem("msf-data") || "{}") as FormData,
   );
   const [complete, setComplete] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -42,13 +40,13 @@ const MultiStepForm = () => {
     localStorage.setItem("msf-step", JSON.stringify(step));
   }, [step]);
 
-  const handleChange = (key: string, value: string): void => {
+  const handleChange = (key: FormField, value: string): void => {
     setData((d) => ({ ...d, [key]: value }));
     setErrors((e) => ({ ...e, [key]: "" }));
   };
 
   const validateStep = (s = step) => {
-    const e: Record<string, string> = {};
+    const e: FormErrors = {};
     if (s === 0) {
       e.fullName = validators.required(data.fullName);
       e.email = validators.required(data.email) || validators.email(data.email);
@@ -73,38 +71,49 @@ const MultiStepForm = () => {
     return Object.values(e).every((error) => error === "");
   };
 
-  const steps = [
-    {
-      id: "personal",
-      title: "Personal",
-      component: (
-        <PersonalInfoStep data={data} onChange={handleChange} errors={errors} />
-      ),
-    },
-    {
-      id: "account",
-      title: "Account",
-      component: (
-        <AccountInfoStep data={data} onChange={handleChange} errors={errors} />
-      ),
-    },
-    {
-      id: "preferences",
-      title: "Preferences",
-      component: (
-        <PreferencesInfoStep
-          data={data}
-          onChange={handleChange}
-          errors={errors}
-        />
-      ),
-    },
-    {
-      id: "review",
-      title: "Review",
-      component: <ReviewInfoStep data={data} />,
-    },
-  ];
+  const steps = useMemo(
+    () => [
+      {
+        id: "personal",
+        title: "Personal",
+        component: (
+          <PersonalInfoStep
+            data={data}
+            onChange={handleChange}
+            errors={errors}
+          />
+        ),
+      },
+      {
+        id: "account",
+        title: "Account",
+        component: (
+          <AccountInfoStep
+            data={data}
+            onChange={handleChange}
+            errors={errors}
+          />
+        ),
+      },
+      {
+        id: "preferences",
+        title: "Preferences",
+        component: (
+          <PreferencesInfoStep
+            data={data}
+            onChange={handleChange}
+            errors={errors}
+          />
+        ),
+      },
+      {
+        id: "review",
+        title: "Review",
+        component: <ReviewInfoStep data={data} />,
+      },
+    ],
+    [data, errors],
+  );
 
   const handlePreviousButton = (): void => {
     setStep((s) => s - 1);
@@ -118,6 +127,8 @@ const MultiStepForm = () => {
   const handleResetForm = (): void => {
     setStep(0);
     setData({});
+    setErrors({});
+    setComplete(false);
     localStorage.removeItem("msf-data");
     localStorage.removeItem("msf-step");
   };
@@ -126,17 +137,14 @@ const MultiStepForm = () => {
     if (!validateStep(step)) return;
     setSubmitting(true);
     try {
-      await new Promise((res) => setTimeout(res, 3000));
+      await new Promise((res) => setTimeout(res, 2000));
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
       });
       setComplete(true);
-      setData({});
       setErrors({});
-      localStorage.removeItem("msf-data");
-      localStorage.removeItem("msf-step");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);

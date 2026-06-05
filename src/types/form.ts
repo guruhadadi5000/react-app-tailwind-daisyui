@@ -1,7 +1,22 @@
+export type FormData = {
+  fullName?: string;
+  email?: string;
+  about?: string;
+  username?: string;
+  password?: string;
+  passwordConfirm?: string;
+  plan?: string;
+  notifications?: string;
+};
+
+export type FormField = keyof FormData;
+
+export type FormErrors = Partial<Record<FormField | "passwordMatch", string>>;
+
 export type FormStepProps = {
-  data: Record<string, string>;
-  onChange: (key: string, value: string) => void;
-  errors: Record<string, string>;
+  data: FormData;
+  onChange: (key: FormField, value: string) => void;
+  errors: FormErrors;
 };
 
 export type AccountInfoStepProps = FormStepProps;

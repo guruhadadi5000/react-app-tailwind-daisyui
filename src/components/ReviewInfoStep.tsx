@@ -1,4 +1,6 @@
-const ReviewInfoStep = ({ data }) => {
+import type { ReviewInfoStepProps } from "../types/form";
+
+const ReviewInfoStep = ({ data }: ReviewInfoStepProps) => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold"> Review Your Information</h3>

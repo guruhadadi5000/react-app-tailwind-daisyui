@@ -1,4 +1,6 @@
-const AccountInfoStep = ({ data, onChange, errors }) => {
+import type { AccountInfoStepProps } from "../types/form";
+
+const AccountInfoStep = ({ data, onChange, errors }: AccountInfoStepProps) => {
   return (
     <div className="space-y-4">
       <div>

@@ -20,8 +20,8 @@ const validators = {
     value.length >= min ? "" : `Must be of ${min} length`,
 };
 
-const MultiStepForm: React.FC = () => {
-  const [step, setStep] = useState(() => {
+const MultiStepForm = () => {
+  const [step, setStep] = useState<number>(() => {
     const stepFromLocalStorage = parseInt(
       localStorage.getItem("msf-step") || "0",
     );
@@ -42,13 +42,13 @@ const MultiStepForm: React.FC = () => {
     localStorage.setItem("msf-step", JSON.stringify(step));
   }, [step]);
 
-  const handleChange = (key, value) => {
+  const handleChange = (key: string, value: string): void => {
     setData((d) => ({ ...d, [key]: value }));
     setErrors((e) => ({ ...e, [key]: "" }));
   };
 
   const validateStep = (s = step) => {
-    const e = {};
+    const e: Record<string, string> = {};
     if (s === 0) {
       e.fullName = validators.required(data.fullName);
       e.email = validators.required(data.email) || validators.email(data.email);
@@ -106,23 +106,23 @@ const MultiStepForm: React.FC = () => {
     },
   ];
 
-  const handlePreviousButton = () => {
+  const handlePreviousButton = (): void => {
     setStep((s) => s - 1);
   };
 
-  const handleNextButton = () => {
+  const handleNextButton = (): void => {
     if (!validateStep(step)) return;
     setStep((s) => s + 1);
   };
 
-  const handleResetForm = () => {
+  const handleResetForm = (): void => {
     setStep(0);
     setData({});
     localStorage.removeItem("msf-data");
     localStorage.removeItem("msf-step");
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!validateStep(step)) return;
     setSubmitting(true);
     try {
@@ -133,12 +133,16 @@ const MultiStepForm: React.FC = () => {
         origin: { y: 0.6 },
       });
       setComplete(true);
-      // setData({});
-      // setErrors({});
-      // localStorage.removeItem("msf-data");
-      // localStorage.removeItem("msf-step");
-    } catch (error) {
-      console.error(error);
+      setData({});
+      setErrors({});
+      localStorage.removeItem("msf-data");
+      localStorage.removeItem("msf-step");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
     } finally {
       setSubmitting(false);
     }

@@ -1,4 +1,10 @@
-const PreferencesInfoStep = ({ data, onChange, errors }) => {
+import type { PreferencesInfoStepProps } from "../types/form";
+
+const PreferencesInfoStep = ({
+  data,
+  onChange,
+  errors,
+}: PreferencesInfoStepProps) => {
   const plans = [
     {
       id: "Free",
@@ -73,8 +79,10 @@ const PreferencesInfoStep = ({ data, onChange, errors }) => {
           <input
             type="checkbox"
             className="toggle toggle-sm"
-            checked={!!data.notifications}
-            onChange={(e) => onChange("notifications", e.target.checked)}
+            checked={data.notifications === "true"}
+            onChange={(e) =>
+              onChange("notifications", e.target.checked ? "true" : "")
+            }
           />
           <span className="ml-3">
             Receive email notifications about product updates

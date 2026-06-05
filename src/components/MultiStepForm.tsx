@@ -20,18 +20,18 @@ const validators = {
     value.length >= min ? "" : `Must be of ${min} length`,
 };
 
-const MultiStepForm = () => {
+const MultiStepForm: React.FC = () => {
   const [step, setStep] = useState(() => {
     const stepFromLocalStorage = parseInt(
       localStorage.getItem("msf-step") || "0",
     );
     return isNaN(stepFromLocalStorage) ? 0 : stepFromLocalStorage;
   });
-  const [data, setData] = useState(() =>
+  const [data, setData] = useState<Record<string, string>>(() =>
     JSON.parse(localStorage.getItem("msf-data") || "{}"),
   );
   const [complete, setComplete] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 # Multi-Step Form
 
-A very simple UI app created to showcase a multi-step registration form built with **React**, **TypeScript**, **Tailwind CSS**, **DaisyUI**, and **Motion**. It is a learning/demo project — not production-ready — focused on form flow, validation, animations, and modern frontend tooling.
+A very simple UI app created to showcase a multi-step registration form built with **React**, **TypeScript**, **Tailwind CSS**, **DaisyUI**, and **Motion**. It is not production-ready, its done just for fun, focused on form flow, validation, animations, and modern frontend tooling.
 
 ## Tech stack
 
@@ -58,11 +58,11 @@ Open the URL shown in the terminal (usually `http://localhost:5173`).
 
 ### Other scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run build` | Type-check and production build |
-| `npm run preview` | Preview the production build |
-| `npm run lint` | Run ESLint |
+| Command             | Description                           |
+| ------------------- | ------------------------------------- |
+| `npm run build`     | Type-check and production build       |
+| `npm run preview`   | Preview the production build          |
+| `npm run lint`      | Run ESLint                            |
 | `npm run typecheck` | Run TypeScript without emitting files |
 
 ## Project structure
